@@ -6,7 +6,7 @@ SERVICES() {
   then
     echo -e "\n$1"
   else
-    echo -e '\nWelcome to My Salon, how can I help you?'
+    echo -e 'Welcome to My Salon, how can I help you?\n'
   fi
   ALL_SERVICES=$($PSQL "SELECT * FROM services;")
   if [[ -z $ALL_SERVICES ]]
@@ -29,7 +29,7 @@ SERVICES() {
         SERVICES "I could not find that service. What would you like today?"
       else
         CUSTOMER_NAME=$($PSQL "SELECT name FROM customers WHERE customer_id = $CUSTOMER_ID;")
-        echo -e "What time would you like your cut, $(echo $CUSTOMER_NAME | sed -r 's/^ *| *$//g')?\n"
+        echo -e "What time would you like your cut, $(echo $CUSTOMER_NAME | sed -r 's/^ *| *$//g')?"
         read SERVICE_TIME
         INSERT_APPOINTMENT=$($PSQL "INSERT INTO appointments(customer_id, service_id, time) VALUES($CUSTOMER_ID, $SERVICE_ID, '$SERVICE_TIME');")
         if [[ $INSERT_APPOINTMENT = "INSERT 0 1" ]]
@@ -43,12 +43,12 @@ SERVICES() {
 }
 
 CUSTOMER_INFO() {
-  echo -e "What's your phone number?\n"
+  echo -e "What's your phone number?"
   read CUSTOMER_PHONE
   CUSTOMER_ID=$($PSQL "SELECT customer_Id FROM customers WHERE phone = '$CUSTOMER_PHONE';")
   if [[ -z $CUSTOMER_ID ]]
   then
-    echo -e "I don't have a record for that phone number, what's your name?\n"
+    echo -e "I don't have a record for that phone number, what's your name?"
     read CUSTOMER_NAME
     INSERT_CUSTOMER=$($PSQL "INSERT INTO customers(phone, name) VALUES('$CUSTOMER_PHONE', '$CUSTOMER_NAME');")
     CUSTOMER_ID=$($PSQL "SELECT customer_id FROM customers WHERE phone = '$CUSTOMER_PHONE';")
